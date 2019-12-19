@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .image {
+        width: 20px;
+        border-radius: 50%;
+    }
+
+    button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        border: 2px solid purple;
+        background: white;
+    }
+
+    button i {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 35% auto;
+        color: purple;
+        font-size: 20px;
+    }
+
+    .container td {
+        width: 22%
+    }
+
+    .footBtn {
+        width: 100px;
+        color: purple
+    }
+</style>
+
+{{>header}}
+
+<body>
+    <form class="container" action="./new-contact" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="exampleInputEmail1">User Name</label>
+            <input type="text" class="form-control" placeholder="User name" name="name">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                placeholder="Enter email" name="email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Message</label>
+            <input type="textarea" class="form-control" placeholder="User name" name="name">
+        </div>
+
+
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                    aria-describedby="inputGroupFileAddon01" name="avatar">
+                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Agree our term</label>
+        </div>
+
+        <input type="submit" class="btn btn-primary"></button>
+    </form>
+
+    {{#each contactArr}}
+    <table class="container">
+        <tr class="form table-bordered">
+            <td><img src="/uploads/{{this.avatar}}" style="height: 60px; border-radius:50%"></img></td>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>
+                {{!-- action="/delete-contact/{{this.id}}" only work for each --}}
+                <form style="width: 40px" action="/delete-contact/{{this.id}}" method="POST"> <button type="submit"><i
+                            class="far fa-trash-alt"></i></button></form>
+                <button type="button" data-toggle="modal" data-target="#editModal" data-whatever="@fat" method="POST"
+                    onClick="setEditModal(" {{this.id}}","{{this.name}}","{{this.email}}")"><i
+                        class="fas fa-pen"></i></button>
+                <button><i class="fas fa-envelope-open-text"><a href="/delete-contact/{{this.id}}"></a></i></button>
+            </td>
+        </tr>
+    </table>
+    {{/each}}
+
+    {{!-- for edit modal--}}
+    {{!-- {{this.id}}is not working outside of hbs each --}}
+    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        id={{this.id}} aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="form-group">
+                            <img id="editImg" style="height: 60px; border-radius:50%"></img>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="editName" for="recipient-name" class="col-form-label">Change
+                                Username</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Change Email
+                                Address {{this.email}}</label>
+                            <input id="editEmail" type="email" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            Send Email: <input type="text" class="form-control" id="recipient-name"
+                                placeholder="send email">
+                            <br>
+                            Password:<input type="password" class="form-control" id="exampleInputPassword1"
+                                placeholder="write your password">
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="footBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="footBtn" type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let setEditModal = (id, name, email, avatar) => {
+        $("#editImg").attr("src", "/uploads/ + avatar")
+        $("#editForm").attr("action", `/edit-contact/${{ id }}`)
+        $("#editName").val(name).text(name)
+
+    }
+</script>
+
+</html>
