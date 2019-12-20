@@ -37,7 +37,7 @@
 {{>header}}
 
 <body>
-    <form class="container" action="./new-contact" method="POST" enctype="multipart/form-data">
+    {{!-- <form class="container" action="./new-contact" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="exampleInputEmail1">User Name</label>
             <input type="text" class="form-control" placeholder="User name" name="name">
@@ -51,14 +51,14 @@
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Message</label>
-            <input type="textarea" class="form-control" placeholder="User name" name="name">
+            <input type="textarea" class="form-control" placeholder="Leave message" name="message">
         </div>
 
 
         <div class="input-group mb-3">
             <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile01"
-                    aria-describedby="inputGroupFileAddon01" name="avatar">
+                <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon01" name="avatar"
+                    id="avatar" name="avatar" multiple="multiple">
                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
             </div>
         </div>
@@ -71,71 +71,183 @@
     </form>
 
     {{#each contactArr}}
-    <table class="container">
-        <tr class="form table-bordered">
-            <td><img src="/uploads/{{this.avatar}}" style="height: 60px; border-radius:50%"></img></td>
-            <td>{{this.name}}</td>
-            <td>{{this.email}}</td>
-            <td>
-                {{!-- action="/delete-contact/{{this.id}}" only work for each --}}
-                <form style="width: 40px" action="/delete-contact/{{this.id}}" method="POST"> <button type="submit"><i
-                            class="far fa-trash-alt"></i></button></form>
-                <button type="button" data-toggle="modal" data-target="#editModal" data-whatever="@fat" method="POST"
-                    onClick="setEditModal(" {{this.id}}","{{this.name}}","{{this.email}}")"><i
-                        class="fas fa-pen"></i></button>
-                <button><i class="fas fa-envelope-open-text"><a href="/delete-contact/{{this.id}}"></a></i></button>
-            </td>
-        </tr>
-    </table>
+    <figure class="figure">
+        <img src="/uploads/{{this.avatar}}" class="figure-img img-fluid rounded" alt="...">
+        <figcaption class="figure-caption">
+            <div>{{this.name}}</div>
+            <div>{{this.email}}</div>
+            <form action="/delete-contact/{{this.id}}" method="POST"><button type="submit">
+                    <i class="far fa-trash-alt"></i></button>
+            </form>
+            <button type="submit" data-toggle="modal" data-target="#editModal" onClick="setModal("
+                {{this.id}}","{{this.name}}","{{this.email}}","{{this.avatar}}")"><i class="fas fa-pen"></i>
+            </button>
+            <button type="submit" data-toggle="modal" data-target="#emailModal" onClick="setModal("
+                {{this.id}}","{{this.avatar}}","{{this.name}}","{{this.email}}")"><i
+                    class="fas fa-envelope-open-text"></i>
+            </button>
+
+        </figcaption>
+    </figure>
     {{/each}}
+ --}}
+
+    <div class="container">
+        <h1 class="text-center">Enter your contact</h1>
+        <form class="col-xs-12 col-md-6 mx-auto" action="/new-contact" method="POST" enctype="multipart/form-data">
+            <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">...</div>
+                </div>
+                <input type="text" class="form-control" name="name" placeholder="Enter your contact's name">
+            </div>
+
+            <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                </div>
+                <input type="email" class="form-control" name="email" placeholder="Enter your contact's e-mail">
+            </div>
+
+            <div class="input-group  mb-1">
+                <label class="custom-file-label" for="avatar">Choose file</label>
+                <input type="file" class="custom-file-input" id="avatar" name="avatar" multiple="multiple">
+            </div>
+
+            <div class="input-group">
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+        </form>
+        <hr>
+
+        {{#each contactArr}}
+        <div class="container row">
+            <ul class="col-xs-12 col-md-6 mx-auto ul">
+                <li class="li row">
+                    <div class="float-left col-11">
+                        <a href="#">
+                            <img src="/uploads/{{this.avatar}}">
+                            {{this.name}}
+                            <div class="float-right">
+                                {{this.email}}
+                            </div>
+                        </a>
+                    </div>
+                    <form class="float-right col-1" action="/delete-contact/{{this.id}}" method="POST">
+                        <button class="btn-delete" type="submit"> ❌ </button>
+                    </form>
+                    <button class="btn-delete" data-toggle="modal" data-target="#editModal"
+                        onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')"> ✏
+                    </button>
+                    <button class="btn-delete" data-toggle="modal" data-target="#emailModal"
+                        onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')"> ✉
+                    </button>
+                </li>
+            </ul>
+        </div>
+        {{/each}}
+
+    </div>
 
     {{!-- for edit modal--}}
-    {{!-- {{this.id}}is not working outside of hbs each --}}
-    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        id={{this.id}} aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    {{!-- {{this.id}}is not working outside of hbs #each --}}
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
+                <div class="modal-header"><img class="userImg float-left" />
+                    <h5 class="name modal-title text-primary"></h5><button class="close" type="button"
+                        data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
                 <div class="modal-body">
-                    <form id="editForm">
-                        <div class="form-group">
-                            <img id="editImg" style="height: 60px; border-radius:50%"></img>
+                    <form id="editForm" class="col-xs-12 col-md-10 mx-auto" method="POST" enctype="multipart/form-data">
+                        <input class="idOfContact" name="id" hidden="hidden" />
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend"></div>
+                            <div class="input-group-text">...</div><input class="name form-control" type="text"
+                                name="name" placeholder="Enter your contact's name" />
                         </div>
-
-                        <div class="form-group">
-                            <label id="editName" for="recipient-name" class="col-form-label">Change
-                                Username</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend"></div>
+                            <div class="input-group-text">@</div><input class="email form-control" type="email"
+                                name="email" placeholder="Enter your contact's e-mail" />
                         </div>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Change Email
-                                Address {{this.email}}</label>
-                            <input id="editEmail" type="email" class="form-control" id="recipient-name">
+                        <div class="input-group mb-1"><label class="custom-file-label" for="avatar">Choose
+                                file</label><input class="custom-file-input" id="avatar" type="file" name="avatar"
+                                multiple="multiple" /></div>
+                        <div class="input-group"><button class="btn btn-primary btn-block" type="submit">Submit</button>
                         </div>
-                        <div class="form-group">
-                            Send Email: <input type="text" class="form-control" id="recipient-name"
-                                placeholder="send email">
-                            <br>
-                            Password:<input type="password" class="form-control" id="exampleInputPassword1"
-                                placeholder="write your password">
-                        </div>
-
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="footBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button class="footBtn" type="button" class="btn btn-primary">Send message</button>
+                    <h5 class="text-center m-auto text-primary">© 2019 Bea Blome</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header"><img class="userImg float-left" />
+                    <h5 class="name modal-title text-primary"></h5><button class="close" type="button"
+                        data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="container" action="/send-mail" method="POST" enctype="multipart/form-data">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">to</div>
+                            </div><input class="email form-control" type="email" name="to" readonly="" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div><input class="form-control" type="email" name="cc" placeholder="CC address" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">...</div>
+                            </div><input class="form-control" type="text" name="subject" placeholder="Mail Subject" />
+                        </div>
+                        <div class="input-group mb-2"><textarea class="form-control" rows="3" name="message"></textarea>
+                        </div>
+                        <div class="input-group mb-2"><label class="custom-file-label" for="attach">Choose
+                                File</label><input class="custom-file-input" id="attach" type="file" name="attach" />
+                        </div>
+                        <hr />
+                        <div class="input-group mb-2" id="userDiv">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div><input class="form-control" type="email" name="user"
+                                placeholder="Your G-mail address" />
+                        </div>
+                        <div class="input-group mb-2" id="passDiv">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"> * </div>
+                            </div><input class="form-control" type="password" name="pass"
+                                placeholder="Your G-mail password" />
+                        </div>
+                        <hr />
+                        <div class="input-group mb-2"><button class="btn btn-primary btn-block"
+                                type="submit">Send</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <h5 class="text-center m-auto text-primary">© 2019 Bea Blome</h5>
                 </div>
             </div>
         </div>
     </div>
 </body>
 <script>
-    let setEditModal = (id, name, email, avatar) => {
-        $("#editImg").attr("src", "/uploads/ + avatar")
-        $("#editForm").attr("action", `/edit-contact/${{ id }}`)
-        $("#editName").val(name).text(name)
-
-    }
-</script>
+    let setModal = (id, avatar, name, email) => {
+        $('#editForm').attr('action', `/edit-contact/${id}`);
+        $('.userImg').attr('src', '/uploads/' + avatar);
+        $('.name').val(name).text(name);
+        $('.email').val(email);
+    }</script>
 
 </html>
