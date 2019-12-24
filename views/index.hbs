@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
+    .figure {
+        width: 30%;
+        margin: 1% auto
+    }
+
     .image {
-        width: 20px;
-        border-radius: 50%;
+        width: 50%;
+        border-radius: 50% !important
+    }
+
+    .rounded {
+        border-radius: 50% !important;
     }
 
     button {
@@ -37,63 +46,9 @@
 {{>header}}
 
 <body>
-    {{!-- <form class="container" action="./new-contact" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="exampleInputEmail1">User Name</label>
-            <input type="text" class="form-control" placeholder="User name" name="name">
-        </div>
-
-        <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                placeholder="Enter email" name="email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Message</label>
-            <input type="textarea" class="form-control" placeholder="Leave message" name="message">
-        </div>
-
-
-        <div class="input-group mb-3">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon01" name="avatar"
-                    id="avatar" name="avatar" multiple="multiple">
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-            </div>
-        </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Agree our term</label>
-        </div>
-
-        <input type="submit" class="btn btn-primary"></button>
-    </form>
-
-    {{#each contactArr}}
-    <figure class="figure">
-        <img src="/uploads/{{this.avatar}}" class="figure-img img-fluid rounded" alt="...">
-        <figcaption class="figure-caption">
-            <div>{{this.name}}</div>
-            <div>{{this.email}}</div>
-            <form action="/delete-contact/{{this.id}}" method="POST"><button type="submit">
-                    <i class="far fa-trash-alt"></i></button>
-            </form>
-            <button type="submit" data-toggle="modal" data-target="#editModal" onClick="setModal("
-                {{this.id}}","{{this.name}}","{{this.email}}","{{this.avatar}}")"><i class="fas fa-pen"></i>
-            </button>
-            <button type="submit" data-toggle="modal" data-target="#emailModal" onClick="setModal("
-                {{this.id}}","{{this.avatar}}","{{this.name}}","{{this.email}}")"><i
-                    class="fas fa-envelope-open-text"></i>
-            </button>
-
-        </figcaption>
-    </figure>
-    {{/each}}
- --}}
 
     <div class="container">
-        <h1 class="text-center">Enter your contact</h1>
+        <h5 class="text-center">Contact Collect with Handlebars</h5>
         <form class="col-xs-12 col-md-6 mx-auto" action="/new-contact" method="POST" enctype="multipart/form-data">
             <div class="input-group mb-1">
                 <div class="input-group-prepend">
@@ -110,41 +65,45 @@
             </div>
 
             <div class="input-group  mb-1">
-                <label class="custom-file-label" for="avatar">Choose file</label>
-                <input type="file" class="custom-file-input" id="avatar" name="avatar" multiple="multiple">
+                <label class="custom-file-label" for="avatar" id="fileHtml">Choose file</label>
+                <input type="file" class="custom-file-input" id="fileBtn" name="avatar" multiple="multiple">
             </div>
 
             <div class="input-group">
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </div>
         </form>
-        <hr>
 
         {{#each contactArr}}
-        <div class="container row">
-            <ul class="col-xs-12 col-md-6 mx-auto ul">
-                <li class="li row">
-                    <div class="float-left col-11">
-                        <a href="#">
-                            <img src="/uploads/{{this.avatar}}">
-                            {{this.name}}
-                            <div class="float-right">
-                                {{this.email}}
-                            </div>
-                        </a>
-                    </div>
-                    <form class="float-right col-1" action="/delete-contact/{{this.id}}" method="POST">
-                        <button class="btn-delete" type="submit"> ❌ </button>
-                    </form>
-                    <button class="btn-delete" data-toggle="modal" data-target="#editModal"
-                        onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')"> ✏
-                    </button>
-                    <button class="btn-delete" data-toggle="modal" data-target="#emailModal"
-                        onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')"> ✉
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <figure class="figure">
+            <a href="#">
+                <img src="/uploads/{{this.avatar}}" class="image figure-img">
+            </a>
+            <div>
+                User Name: {{this.name}}
+            </div>
+
+            <div>
+                Email: {{this.email}}
+            </div>
+
+
+            <figcaption class="figure-caption">
+
+                <form class="float-left" action="/delete-contact/{{this.id}}" method="POST">
+                    <button class="btn-delete" type="submit"> <i class="far fa-trash-alt"></i> </button>
+                </form>
+                <button class="btn-delete" data-toggle="modal" data-target="#editModal"
+                    onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="btn-delete" data-toggle="modal" data-target="#emailModal"
+                    onclick="setModal('{{this.id}}','{{this.avatar}}','{{this.name}}','{{this.email}}')">
+                    <i class="fas fa-envelope-open-text"></i>
+                </button>
+            </figcaption>
+
+        </figure>
         {{/each}}
 
     </div>
@@ -172,9 +131,11 @@
                             <div class="input-group-text">@</div><input class="email form-control" type="email"
                                 name="email" placeholder="Enter your contact's e-mail" />
                         </div>
-                        <div class="input-group mb-1"><label class="custom-file-label" for="avatar">Choose
-                                file</label><input class="custom-file-input" id="avatar" type="file" name="avatar"
-                                multiple="multiple" /></div>
+                        <div class="input-group mb-1"><label id="editFileHtml" class="custom-file-label"
+                                for="avatar">Choose
+                                file</label><input id="avatarEditInput" class="custom-file-input" type="file"
+                                name="avatar" multiple="multiple" />
+                        </div>
                         <div class="input-group"><button class="btn btn-primary btn-block" type="submit">Submit</button>
                         </div>
                     </form>
@@ -185,6 +146,9 @@
             </div>
         </div>
     </div>
+
+    {{!-- for email sending modal--}}
+    {{!-- {{this.id}}is not working outside of hbs #each --}}
 
     <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
@@ -248,6 +212,35 @@
         $('.userImg').attr('src', '/uploads/' + avatar);
         $('.name').val(name).text(name);
         $('.email').val(email);
-    }</script>
+    }
+
+    //to write a file name onto the image upload input
+    let fileHtml = document.getElementById("fileHtml")
+    let fileBtn = document.getElementById("fileBtn")
+    fileBtn.addEventListener("change", () => {
+        if (fileBtn.value) {
+            fileHtml.innerHTML = fileBtn.value
+        } else {
+            fileHtml.innerHTML = "please select an image"
+        }
+    })
+
+    //to write file name in the edit file part
+    const editFileHtml = document.getElementById("editFileHtml")
+    let editfileBtn = document.getElementById("avatarEditInput")
+
+    editfileBtn.addEventListener("change", () => {
+        if (editfileBtn.value) {
+            editFileHtml.innerHTML = editfileBtn.value
+        } else {
+            editfileHtml.innerHTML = "please select an image"
+        }
+    })
+
+
+</script>
+
+
+
 
 </html>

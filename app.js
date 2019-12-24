@@ -222,7 +222,7 @@ app.post("/new-contact", (req, res) => {
   upload(req, res, () => {
     //TBD
     if (fileName == null) {
-      fileName = "homer.png";
+      fileName = "m2.png";
     }
     let contact = {
       id: Date.now(),
@@ -251,8 +251,8 @@ app.post("/new-contact", (req, res) => {
         .resize(250, 250)
         .quality(60)
         .write("public/uploads/" + fileName);
+      fileName = null;
     });
-    fileName = null;
 
     res.redirect("/");
   });
