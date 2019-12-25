@@ -4,7 +4,8 @@
   "description": "FBW7 Contact list project with whole node.js",
   "main": "app.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node contact-list.js"
   },
   "author": "Bulent",
   "license": "MIT",
