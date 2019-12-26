@@ -5,7 +5,7 @@
     "node": "12.11.1"
   },
   "description": "FBW7 Contact list project with whole node.js",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "test",
     "start": "node index.js"
